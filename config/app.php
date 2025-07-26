@@ -13,6 +13,8 @@ return [
     |
     */
 
+
+
     'name' => env('APP_NAME', 'Laravel'),
 
     /*
@@ -103,6 +105,7 @@ return [
         ...array_filter(
             explode(',', (string) env('APP_PREVIOUS_KEYS', ''))
         ),
+
     ],
 
     /*
@@ -123,4 +126,9 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+
+    'aliases' => [
+
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+    ]
 ];
