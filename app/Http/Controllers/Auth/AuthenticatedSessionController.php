@@ -34,7 +34,11 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('admin.dashboard');
         } elseif ($user->role === 'employe') {
             return redirect()->route('employe.dashboard');
-        } else {
+        } elseif ($user->role === 'vendeur') {
+            return redirect()->route('vendeur.dashboard');
+        } elseif ($user->role === 'caissier') {
+            return redirect()->route('caissier.dashboard');
+        }else {
             // Rôle inconnu ou sans dashboard spécifique
             return redirect()->route('dashboard'); // Dashboard par défaut
         }

@@ -9,7 +9,7 @@ class EmployeDashboardController extends Controller
 {
     public function index()
     {
-        return view('welcome'); // adapte le nom de la vue si nécessaire
+        return view('vendeur.index'); // adapte le nom de la vue si nécessaire
     }
 
 }

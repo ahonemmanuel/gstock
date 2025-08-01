@@ -8,6 +8,7 @@
     <div
         id="createCategoryModal"
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50"
+
         x-data="{ iconClass: 'fas fa-box' }"
     >
         <div class="bg-white rounded-lg shadow p-6 w-full max-w-3xl relative">

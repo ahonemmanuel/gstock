@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -17,6 +19,11 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
     protected $fillable = [
         'name',
         'email',

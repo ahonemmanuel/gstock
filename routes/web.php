@@ -2,11 +2,15 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Employe\EmployeDashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\StockMovementController;
+use App\Http\Controllers\VendeurCartController;
+use App\Http\Controllers\VendeurPanierController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,6 +28,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+
+
+
+
 });
 
 require __DIR__.'/auth.php';
@@ -56,5 +66,20 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:employe'])->group(function () {
-    Route::get('/employe', [EmployeDashboardController::class, 'index'])->name('employe.dashboard');
+});
+
+Route::middleware(['auth', 'role:vendeur'])->group(function () {
+
+    Route::get('/vendeur/produits', [\App\Http\Controllers\ProductController::class, 'index'])->name('vendeur.produits');
+    Route::get('/vendeur/dashboard', [EmployeDashboardController::class, 'index'])->name('vendeur.dashboard');
+
+
+    Route::prefix('cart')->group(function() {
+        Route::post('/items', [VendeurCartController::class, 'addToCart'])->name('vendeur.cart.add');
+        Route::put('/items/{item}', [VendeurCartController::class, 'updateCart'])->name('vendeur.cart.update');
+        Route::delete('/items/{item}', [VendeurCartController::class, 'removeFromCart'])->name('vendeur.cart.remove');
+        Route::post('/checkout', [VendeurCartController::class, 'checkout'])->name('vendeur.cart.checkout');
+        Route::post('/save', [VendeurCartController::class, 'save'])->name('save');
+        Route::get('/', [VendeurCartController::class, 'viewCart'])->name('vendeur.cart.view');
+    });
 });
