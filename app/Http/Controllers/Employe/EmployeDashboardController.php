@@ -7,5 +7,9 @@ use Illuminate\Http\Request;
 
 class EmployeDashboardController extends Controller
 {
-    //
+    public function index()
+    {
+        return view('welcome'); // adapte le nom de la vue si nécessaire
+    }
+
 }
