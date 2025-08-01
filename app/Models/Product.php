@@ -59,6 +59,10 @@ class Product extends Model
         'status'
     ];
 
+    public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class);
+    }
     protected $casts = [
         'price' => 'decimal:2',
         'cost' => 'decimal:2',

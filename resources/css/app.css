@@ -2,23 +2,3 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Pagination styles */
-.pagination {
-    @apply flex space-x-2;
-}
-
-.pagination button, .pagination a {
-    @apply px-3 py-1 border rounded-lg text-sm;
-}
-
-.pagination .active {
-    @apply bg-primary text-white;
-}
-
-.pagination .disabled {
-    @apply opacity-50 cursor-not-allowed;
-}
-.form-input {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
-}
-

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Employe\EmployeDashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\StockMovementController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -47,6 +48,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('products/export', [ProductController::class, 'export'])->name('products.export');
 
 
+    //gestion des mouvements
+
+    Route::resource('stock-movements', StockMovementController::class)->only([
+        'index', 'store', 'destroy'
+    ]);
 });
 
 Route::middleware(['auth', 'role:employe'])->group(function () {
