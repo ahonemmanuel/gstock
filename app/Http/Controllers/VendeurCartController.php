@@ -41,7 +41,7 @@ class VendeurCartController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function addToCart(Request $request)
+    public function addToCat(Request $request)
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
@@ -50,6 +50,10 @@ class VendeurCartController extends Controller
         $user = Auth::user();
         $product = Product::findOrFail($request->product_id);
 
+        if ($product->quantity <= 0) {
+
+            return response()->json(['success' => false, 'message' => 'Produit en rupture de stock.']);
+        }
         // Check if user has an active cart
         $cart = Cart::firstOrCreate([
             'user_id' => $user->id,
@@ -71,11 +75,64 @@ class VendeurCartController extends Controller
             ]);
         }
 
+
         return response()->json([
             'success' => true,
-            'cart_count' => $cart->items()->count()
+            'cart_count' => $cart->items()->count(),
+            'product_id' => $product->id,
+            'quantity' => $product->quantity, // utile pour bloquer le bouton si nécessaire
+        ]);
+
+    }
+
+    public function addToCart(Request $request)
+    {
+        $user = auth()->user();
+        $product = Product::findOrFail($request->product_id);
+
+        // Vérifie si le produit est disponible
+        if ($product->quantity <= 0) {
+            return response()->json(['success' => false, 'message' => 'Produit en rupture de stock.']);
+        }
+
+        // Récupère ou crée le panier de l'utilisateur
+        $cart = Cart::firstOrCreate([
+            'user_id' => $user->id,
+            'status' => 'pending'
+        ]);
+
+        // Vérifie si le produit est déjà dans le panier
+        $item = $cart->items()->where('product_id', $product->id)->first();
+
+        if ($item) {
+
+            // Vérifie si on peut encore en ajouter (ex: stock >= quantité actuelle + 1)
+            if ($product->quantity < ($item->quantity + 1)) {
+                return response()->json(['success' => false, 'message' => 'Quantité maximale atteinte.']);
+            }
+
+            $item->quantity += 1;
+            $item->save();
+        } else {
+            $cart->items()->create([
+                'product_id' => $product->id,
+                'quantity' => 1,
+                'price' => $product->price
+            ]);
+        }
+
+        // Réduit la quantité du stock produit
+        $product->decrement('quantity');
+
+        // Retourne le nombre d'items total dans le panier
+        $cartCount = $cart->items->sum('quantity');
+
+        return response()->json([
+            'success' => true,
+            'cart_count' => $cartCount
         ]);
     }
+
 
     public function viewCart()
     {
@@ -86,7 +143,6 @@ class VendeurCartController extends Controller
 
         return view('vendeur.cart', compact('cart'));
     }
-
 
 
     public function checkout(Request $request)
@@ -134,14 +190,6 @@ class VendeurCartController extends Controller
             DB::rollBack();
             return back()->with('error', 'Erreur lors du traitement de la commande : ' . $e->getMessage());
         }
-    }
-
-
-    public function save(Request $request)
-    {
-
-        return redirect()->route('vendeur.produits')
-            ->with('success', 'Sale completed successfully');
     }
 
 }

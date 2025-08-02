@@ -83,4 +83,9 @@ class Product extends Model
         }
         return 'in';
     }
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
 }

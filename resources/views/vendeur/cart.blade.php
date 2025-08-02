@@ -1,17 +1,20 @@
 <div>
     @if($cart && $cart->items->count() > 0)
         @foreach($cart->items as $item)
-            <div class="cart-item border-b py-4" data-price="{{ $item->product->price }}">
+
+        <div class="cart-item border-b py-4" data-id="{{ $item->id }}" data-price="{{ $item->product->price }}">
+
                 <div class="flex justify-between items-start mb-2">
                     <div>
                         <h4 class="font-semibold">{{ $item->product->name }}</h4>
-                        <p class="text-gray-600 text-sm">€{{ number_format($item->product->price, 2) }} x {{ $item->quantity }}</p>
+                        <p class="text-gray-600 text-sm">{{ number_format($item->product->price, 2) }}F x {{ $item->quantity }}</p>
                     </div>
-                    <span class="font-semibold">€{{ number_format($item->product->price * $item->quantity, 2) }}</span>
+                    <span class="font-semibold">{{ number_format($item->product->price * $item->quantity, 2) }}F</span>
                 </div>
 
                 <div class="flex justify-between items-center">
                     <div class="flex items-center">
+
                         <button onclick="updateItemQuantity({{ $item->id }}, parseInt(this.nextElementSibling.value) - 1)"
                                 class="bg-gray-200 px-2 py-1 rounded-l" {{ $item->quantity <= 1 ? 'disabled' : '' }}>
                             -
@@ -23,6 +26,7 @@
                                 class="bg-gray-200 px-2 py-1 rounded-r">
                             +
                         </button>
+
                     </div>
                     <button onclick="removeItem({{ $item->id }})" class="text-red-500 hover:text-red-700">
                         <i class="fas fa-trash"></i>

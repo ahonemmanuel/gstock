@@ -87,10 +87,21 @@
                                     <div>
                                         <span class="font-bold text-lg">{{ number_format($product->price, 2) }} Fcfa</span>
                                     </div>
-                                    <button onclick="addToCart({{ $product->id }})"
-                                            class="bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 text-sm transition duration-300">
-                                        <i class="fas fa-cart-plus"></i>
-                                    </button>
+
+                                    @if($product->quantity > 0)
+                                        <button onclick="addToCart({{ $product->id }})"
+                                                class="bg-blue-600 text-white px-3 py-1 rounded-lg hover:bg-blue-700 text-sm transition duration-300">
+                                            <i class="fas fa-cart-plus"></i>
+                                        </button>
+                                    @else
+                                        <button disabled
+                                                class="bg-gray-400 text-white px-3 py-1 rounded-lg text-sm cursor-not-allowed opacity-60"
+                                                title="Rupture de stock">
+                                            <i class="fas fa-ban mr-1"></i> Indisponible
+                                        </button>
+                                    @endif
+
+
                                 </div>
                                 <!-- Informations supplémentaires -->
                                 <div class="mt-2 text-sm text-gray-600">
@@ -250,41 +261,8 @@
                         });
                 });
 
-                function updateItemQuantity(itemId, quantity) {
-                    fetch(`/vendeur/cart/items/${itemId}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({ quantity: quantity })
-                    })
-                        .then(response => {
-                            if (response.ok) {
-                                loadCartItems();
-                            }
-                        });
-                }
 
-                function removeItem(itemId) {
-                    if (confirm('Êtes-vous sûr de vouloir supprimer cet article ?')) {
-                        fetch(`/vendeur/cart/items/${itemId}`, {
-                            method: 'DELETE',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                            }
-                        })
-                            .then(response => {
-                                if (response.ok) {
-                                    loadCartItems();
-                                    // Update cart count
-                                    const countElement = document.getElementById('cart-count');
-                                    countElement.textContent = parseInt(countElement.textContent) - 1;
-                                }
-                            });
-                    }
-                }
+
             </script>
 
     @endsection

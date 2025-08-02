@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -213,4 +214,31 @@ class CartController extends Controller
 
         return back()->with('success', 'Produit ajouté au panier');
     }
+
+
+
+
+
+    public function updateQuantity(Request $request, $id)
+    {
+        $item = CartItem::findOrFail($id);
+        $quantity = max(1, (int)$request->quantity);
+
+        $item->update(['quantity' => $quantity]);
+
+        return response()->json([
+            'success' => true,
+            'total' => number_format($item->product->price * $item->quantity, 2)
+        ]);
+    }
+
+    public function removeItem($id)
+    {
+        $item = CartItem::findOrFail($id);
+        $item->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+
 }

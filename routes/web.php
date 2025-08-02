@@ -76,10 +76,16 @@ Route::middleware(['auth', 'role:vendeur'])->group(function () {
 
     Route::prefix('cart')->group(function() {
         Route::post('/items', [VendeurCartController::class, 'addToCart'])->name('vendeur.cart.add');
-        Route::put('/items/{item}', [VendeurCartController::class, 'updateCart'])->name('vendeur.cart.update');
-        Route::delete('/items/{item}', [VendeurCartController::class, 'removeFromCart'])->name('vendeur.cart.remove');
         Route::post('/checkout', [VendeurCartController::class, 'checkout'])->name('vendeur.cart.checkout');
         Route::post('/save', [VendeurCartController::class, 'save'])->name('save');
         Route::get('/', [VendeurCartController::class, 'viewCart'])->name('vendeur.cart.view');
+
+        //Route::put('/items/{cartItem}', [VendeurCartController::class, 'updateCart'])->name('vendeur.cart.update');
+     //   Route::delete('/items/{cartItem}', [VendeurCartController::class, 'removeFromCart'])->name('vendeur.cart.remove');
+
+            Route::post('/update/{id}', [CartController::class, 'updateQuantity'])->name('cart.update');
+            Route::delete('/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
+
+
     });
 });
