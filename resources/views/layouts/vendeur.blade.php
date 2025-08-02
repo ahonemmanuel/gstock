@@ -10,6 +10,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <!-- layouts/app.blade.php ou layouts/vendeur.blade.php -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 
     <!-- FontAwesome CSS -->
 
@@ -170,59 +173,14 @@
                     <i class="fas fa-tags mr-3"></i>
                     <span class="sidebar-text">Catalogue des produits </span>
                 </a>
-                <a href="{{route('stock-movements.index')}}"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-exchange-alt mr-3"></i>
-                    <span class="sidebar-text">Mouvements de stock</span>
-                </a>
                 <a href="#"
                    class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
                     <i class="fas fa-exclamation-triangle mr-3"></i>
-                    <span class="sidebar-text">Stock faible</span>
+                    <span class="sidebar-text">stats des vente</span>
                 </a>
             </div>
 
-            <div class="p-2">
-                <p class="text-xs uppercase text-gray-500 font-semibold px-3 py-2 sidebar-text">Transactions</p>
-                <a href="#"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-shopping-cart mr-3"></i>
-                    <span class="sidebar-text">Ventes</span>
-                </a>
-                <a href="#"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-truck mr-3"></i>
-                    <span class="sidebar-text">Réapprovisionnement</span>
-                </a>
-            </div>
 
-            <div class="p-2">
-                <p class="text-xs uppercase text-gray-500 font-semibold px-3 py-2 sidebar-text">Gestion</p>
-                <a href="#"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-users mr-3"></i>
-                    <span class="sidebar-text">Clients</span>
-                </a>
-                <a href="#"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-industry mr-3"></i>
-                    <span class="sidebar-text">Fournisseurs</span>
-                </a>
-            </div>
-
-            <div class="p-2">
-                <p class="text-xs uppercase text-gray-500 font-semibold px-3 py-2 sidebar-text">Rapports</p>
-                <a href="#"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-chart-line mr-3"></i>
-                    <span class="sidebar-text">Rapports de ventes</span>
-                </a>
-                <a href="#"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-chart-pie mr-3"></i>
-                    <span class="sidebar-text">Rapports d'inventaire</span>
-                </a>
-            </div>
         </nav>
 
         <!-- Menu bas -->

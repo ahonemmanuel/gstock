@@ -13,7 +13,9 @@
 
     <!-- FontAwesome CSS -->
 
-
+    <!-- Toastify for notifications -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -21,6 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Tes styles personnalisés ici -->
     <script>
+
         tailwind.config = {
             theme: {
                 extend: {
@@ -38,6 +41,29 @@
         }
     </script>
     <style>
+        /* Cart sidebar transition */
+        #cart-sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Cart overlay transition */
+        #cart-overlay {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Quantity input arrows */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+
+
         .sidebar {
             transition: all 0.3s ease;
         }
@@ -127,83 +153,31 @@
         <nav class="flex-1 overflow-y-auto">
             <div class="p-2">
                 <p class="text-xs uppercase text-gray-500 font-semibold px-3 py-2 sidebar-text">Principal</p>
-                <a href="{{route('admin.dashboard')}}"
+                <a href="{{route('vendeur.dashboard')}}"
                    class="flex items-center px-3 py-3 text-sm font-medium rounded-lg
-                     {{ Route::currentRouteName() === 'admin.dashboard' ? 'bg-primary text-primary bg-opacity-10' : 'text-gray-700 hover:bg-gray-100' }}">
+                     {{ Route::currentRouteName() === 'vendeur.dashboard' ? 'bg-primary text-primary bg-opacity-10' : 'text-gray-700 hover:bg-gray-100' }}">
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     <span class="sidebar-text">Tableau de bord</span>
                 </a>
             </div>
 
             <div class="p-2">
-                <p class="text-xs uppercase text-gray-500 font-semibold px-3 py-2 sidebar-text">Inventaire</p>
-                <a href="{{route('products.index')}}"
+                <p class="text-xs uppercase text-gray-500 font-semibold px-3 py-2 sidebar-text">Gestion de la vente</p>
+                <a href="{{route('vendeur.produits')}}"
                    class="flex items-center px-3 py-3 text-sm font-medium rounded-lg
-                    {{ Route::currentRouteName() === 'products.index' ? 'bg-primary text-primary bg-opacity-10' : 'text-gray-700 hover:bg-gray-100' }}">
-
-                    <i class="fas fa-boxes mr-3"></i>
-                    <span class="sidebar-text">Produits</span>
-                </a>
-                <a href="{{route('categories.index')}}"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg
-                    {{ Route::currentRouteName() === 'categories.index' ? 'bg-primary text-primary bg-opacity-10' : 'text-gray-700 hover:bg-gray-100' }}">
+                    {{ Route::currentRouteName() === 'vendeur.produits' ? 'bg-primary text-primary bg-opacity-10' : 'text-gray-700 hover:bg-gray-100' }}">
 
                     <i class="fas fa-tags mr-3"></i>
-                    <span class="sidebar-text">Catégories</span>
-                </a>
-                <a href="{{route('stock-movements.index')}}"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-exchange-alt mr-3"></i>
-                    <span class="sidebar-text">Mouvements de stock</span>
+                    <span class="sidebar-text">Catalogue des produits </span>
                 </a>
                 <a href="#"
                    class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
                     <i class="fas fa-exclamation-triangle mr-3"></i>
-                    <span class="sidebar-text">Stock faible</span>
+                    <span class="sidebar-text">stats des vente</span>
                 </a>
             </div>
 
-            <div class="p-2">
-                <p class="text-xs uppercase text-gray-500 font-semibold px-3 py-2 sidebar-text">Transactions</p>
-                <a href="#"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-shopping-cart mr-3"></i>
-                    <span class="sidebar-text">Ventes</span>
-                </a>
-                <a href="#"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-truck mr-3"></i>
-                    <span class="sidebar-text">Réapprovisionnement</span>
-                </a>
-            </div>
 
-            <div class="p-2">
-                <p class="text-xs uppercase text-gray-500 font-semibold px-3 py-2 sidebar-text">Gestion</p>
-                <a href="#"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-users mr-3"></i>
-                    <span class="sidebar-text">Clients</span>
-                </a>
-                <a href="#"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-industry mr-3"></i>
-                    <span class="sidebar-text">Fournisseurs</span>
-                </a>
-            </div>
-
-            <div class="p-2">
-                <p class="text-xs uppercase text-gray-500 font-semibold px-3 py-2 sidebar-text">Rapports</p>
-                <a href="#"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-chart-line mr-3"></i>
-                    <span class="sidebar-text">Rapports de ventes</span>
-                </a>
-                <a href="#"
-                   class="flex items-center px-3 py-3 text-sm font-medium rounded-lg text-gray-700 hover:bg-gray-100">
-                    <i class="fas fa-chart-pie mr-3"></i>
-                    <span class="sidebar-text">Rapports d'inventaire</span>
-                </a>
-            </div>
         </nav>
 
         <!-- Menu bas -->
@@ -243,10 +217,17 @@
             <div class="flex items-center justify-between">
                 <h1 class="text-2xl font-bold text-dark">@yield('entete')</h1>
                 <div class="flex items-center space-x-4">
+
+
+
                     <div class="relative">
-                        <input type="text" placeholder="Rechercher..."
-                               class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        <form method="GET" action="{{ route('vendeur.produits') }}" class="relative flex-1">
+                            @csrf
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                   placeholder="Rechercher un produit..."
+                                   class="pl-10 pr-4 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        </form>
                     </div>
                     @if (Route::currentRouteName() === 'categories.index')
 

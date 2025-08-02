@@ -76,8 +76,6 @@ Route::middleware(['auth', 'role:vendeur'])->group(function () {
 
     Route::prefix('cart')->group(function() {
         Route::post('/items', [VendeurCartController::class, 'addToCart'])->name('vendeur.cart.add');
-        Route::post('/checkout', [VendeurCartController::class, 'checkout'])->name('vendeur.cart.checkout');
-        Route::post('/save', [VendeurCartController::class, 'save'])->name('save');
         Route::get('/', [VendeurCartController::class, 'viewCart'])->name('vendeur.cart.view');
 
         //Route::put('/items/{cartItem}', [VendeurCartController::class, 'updateCart'])->name('vendeur.cart.update');
@@ -85,6 +83,19 @@ Route::middleware(['auth', 'role:vendeur'])->group(function () {
 
             Route::post('/update/{id}', [CartController::class, 'updateQuantity'])->name('cart.update');
             Route::delete('/remove/{id}', [CartController::class, 'removeItem'])->name('cart.remove');
+
+        Route::post('/checkout', [VendeurCartController::class, 'checkout'])->name('vendeur.cart.checkout');
+
+    });
+});
+
+Route::middleware(['auth', 'role:caissier'])->group(function () {
+    Route::get('/caissier/dashboard', [\App\Http\Controllers\CaissierController::class, 'index'])->name('caissier.dashboard');
+
+
+
+    Route::prefix('cart')->group(function() {
+
 
 
     });

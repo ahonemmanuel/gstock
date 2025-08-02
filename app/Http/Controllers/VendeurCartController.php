@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -145,20 +147,30 @@ class VendeurCartController extends Controller
     }
 
 
+
+
     public function checkout(Request $request)
     {
         $user = Auth::user();
 
         // Récupère le panier avec les items
-        $cart = Cart::with('items')->where('user_id', $user->id)
+        $cart = Cart::with('items.product')->where('user_id', $user->id)
             ->where('status', 'pending')
             ->firstOrFail();
 
         DB::beginTransaction();
 
         try {
+            // Créer une commande
+            $order = Order::create([
+                'user_id' => $user->id,
+                'total' => 0, // on le calcule après
+                'status' => 'pending', // ou 'completed' selon ta logique
+            ]);
+
+            $total = 0;
+
             foreach ($cart->items as $item) {
-                // Verrouille la ligne produit pour éviter les conflits concurrents
                 $product = DB::table('products')
                     ->where('id', $item->product_id)
                     ->lockForUpdate()
@@ -174,18 +186,38 @@ class VendeurCartController extends Controller
                     return back()->with('error', "Stock insuffisant pour le produit {$product->name}");
                 }
 
-                // Mise à jour de la quantité du produit
+                // Met à jour le stock du produit
                 DB::table('products')->where('id', $product->id)
                     ->decrement('quantity', $item->quantity);
+
+                // Crée l'item de la commande
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                    'price' => $item->product->price,
+                ]);
+
+                $total += $item->product->price * $item->quantity;
             }
 
-            // Mise à jour du statut du panier
+            // Met à jour le total de la commande
+            $order->update([
+                'total' => $total,
+                'status' => 'completed'
+            ]);
+
+            // Marque le panier comme terminé
             $cart->update(['status' => 'completed']);
+
+            // Vide les articles du panier
+            $cart->items()->delete();
 
             DB::commit();
 
             return redirect()->route('vendeur.produits')
-                ->with('success', 'Vente finalisée avec succès');
+                ->with('success', 'Commande enregistrée avec succès');
+
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Erreur lors du traitement de la commande : ' . $e->getMessage());
